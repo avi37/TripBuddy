@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_logIn"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/travel_login1"
+    tools:context="com.example.avi.firebaseauth.LogIn">
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar_login"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="410dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/loginlogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/whitelogo" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="160dp"
+        android:background="@drawable/trans_white_background"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <EditText
+            android:id="@+id/loginAct_et_email"
+            android:layout_width="match_parent"
+            android:drawableLeft="@drawable/ic_action_user"
+            android:layout_height="40dp"
+            android:singleLine="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="13dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/rounded_white"
+            android:drawablePadding="5dp"
+            android:hint="E-mail"
+            android:maxLines="1"
+            android:maxLength="30"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:textSize="14sp"
+            android:layout_weight="0.02" />
+
+        <EditText
+            android:id="@+id/loginAct_et_pwd"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:layout_height="40dp"
+            android:drawableLeft="@drawable/ic_action_pass"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="13dp"
+            android:singleLine="true"
+            android:layout_marginStart="13dp"
+            android:background="@drawable/rounded_white"
+            android:drawablePadding="5dp"
+            android:hint="Password"
+            android:maxLength="32"
+            android:maxLines="1"
+            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_blue_btn"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:textSize="22dp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/tv_signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="Don't have an account yet? Signup here"
+            android:textColor="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_feedback_form"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.avi.firebaseauth.FeedbackForm"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_feedback_text"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:gravity="top"
+        android:background="@drawable/et_feedback_border"
+        android:hint="Type Here..."
+        android:textAlignment="gravity" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:numStars="5"
+        android:stepSize="1"
+        android:id="@+id/feedback_ratingBar" />
+
+    <TextView
+        android:id="@+id/rating_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Poor"
+        android:layout_marginBottom="10dp"
+        android:textColor="#1d18af"
+        android:visibility="invisible"
+        android:textSize="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_blue_btn"
+            android:text="Submit"
+            android:layout_weight="1"
+            android:layout_marginRight="15dp"
+            android:id="@+id/btn_feedback_submit"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_grey_btn"
+            android:layout_marginLeft="7dp"
+            android:id="@+id/btn_feedback_cancel"
+            android:layout_weight="1"
+            android:text="Cancel" />
+    </LinearLayout>
+</LinearLayout>
