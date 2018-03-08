@@ -32,12 +32,14 @@ public class MainNavigation extends SelectProfilePic
     ImageView imageView_profile;
     TextView textView_userName;
     FirebaseAuth mAuth;
+    SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_navigation);
         mAuth = FirebaseAuth.getInstance();
+        session = new SessionManager(getApplicationContext());
         imageView_profile = (ImageView) findViewById(R.id.nav_profileImage);
         textView_userName = (TextView) findViewById(R.id.nav_username);
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -102,11 +104,16 @@ public class MainNavigation extends SelectProfilePic
             goToPlaystore();
             return true;
         } else if (id == R.id.nav_share) {
-            fragment = new Share();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "https:nehal.tech/home.html");
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent, "EXTRA_SUNJECT"));
+            drawer.closeDrawer(GravityCompat.START);
         } else if (id == R.id.nav_logout) {
-            FirebaseAuth.getInstance().signOut();
-            finish();
-            startActivity(new Intent(getApplication(), LogIn.class));
+            showLogoutDialog();
+            //logout();
             return true;
         } else if (id == R.id.nav_quit) {
             //showQuitDialog();
@@ -118,6 +125,12 @@ public class MainNavigation extends SelectProfilePic
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout() {
+        FirebaseAuth.getInstance().signOut();
+        session.logoutUser();
+        startActivity(new Intent(getApplicationContext(), LogIn.class));
     }
 
     private void showQuitDialog() {
@@ -141,13 +154,35 @@ public class MainNavigation extends SelectProfilePic
         dialog.show();
     }
 
+    private void showLogoutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage("Are you sure you want to logout?")
+                .setTitle("Confirm Logout");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                logout();
+                //System.exit(0);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                return;
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     void loadUserInfo() {
         try {
             File filepath = Environment.getExternalStorageDirectory();
             String path = filepath.getAbsolutePath()
                     + "/TripBuddy/Profile Image";
             FirebaseUser user = mAuth.getCurrentUser();
-            File f = new File(path, user.getDisplayName().toString() + ".jpg");
+            File f = new File(path, "1.jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
             imageView_profile.setImageBitmap(b);
             if (user.getDisplayName() != null) {

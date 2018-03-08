@@ -24,8 +24,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 public class LogIn extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
+    SessionManager session;
     EditText editTextEmail, editTextPwd;
-    TextView textViewSignup;
+    TextView textViewSignup, textViewSkip;
     Button buttonLogin;
     String email, pwd;
     ProgressBar progressBar;
@@ -37,11 +38,14 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
         editTextEmail = (EditText) findViewById(R.id.loginAct_et_email);
         editTextPwd = (EditText) findViewById(R.id.loginAct_et_pwd);
         textViewSignup = (TextView) findViewById(R.id.tv_signup);
+        textViewSkip = (TextView)findViewById(R.id.tv_login_skip);
         buttonLogin = (Button) findViewById(R.id.btn_login);
         buttonLogin.setOnClickListener(this);
         textViewSignup.setOnClickListener(this);
+        textViewSkip.setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
-       progressBar = (ProgressBar) findViewById(R.id.progressBar_login);
+        session = new SessionManager(getApplicationContext());
+        progressBar = (ProgressBar) findViewById(R.id.progressBar_login);
 
     }
 
@@ -104,6 +108,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
                     finish();
+                    session.createLoginSession(email, pwd);
                     Intent i = new Intent(getApplicationContext(), SelectProfilePic.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
@@ -124,7 +129,8 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
         checkConn();
         if (mAuth.getCurrentUser() != null) {
             finish();
-            startActivity(new Intent(getApplicationContext(), SelectProfilePic.class));
+            session.checkLogin();
+            //startActivity(new Intent(getApplicationContext(), SelectProfilePic.class));
         }
     }
 
@@ -136,6 +142,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        Intent i;
         switch (view.getId()) {
             case R.id.btn_login:
                 boolean checkConnection = new ConnectionCheck().checkConnection(this);
@@ -147,7 +154,12 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                 break;
 
             case R.id.tv_signup:
-                Intent i = new Intent(this, SignUp.class);
+                i = new Intent(this, SignUp.class);
+                startActivity(i);
+                finish();
+                break;
+            case R.id.tv_login_skip:
+                i = new Intent(this, MainNavigation.class);
                 startActivity(i);
                 finish();
                 break;

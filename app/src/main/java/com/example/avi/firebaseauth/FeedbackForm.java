@@ -1,5 +1,6 @@
 package com.example.avi.firebaseauth;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,16 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class FeedbackForm extends AppCompatActivity implements View.OnClickListener {
 
     RatingBar ratingBar_feedback;
@@ -17,10 +28,17 @@ public class FeedbackForm extends AppCompatActivity implements View.OnClickListe
     Button buttonFeedbackSave, buttonFeedbackCancel;
     String feedbackText;
 
+    FirebaseFirestore db;
+    FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback_form);
+
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
         ratingBar_feedback = (RatingBar) findViewById(R.id.feedback_ratingBar);
         ratingText_feedback = (TextView) findViewById(R.id.rating_text);
         buttonFeedbackSave = (Button) findViewById(R.id.btn_feedback_submit);
@@ -28,6 +46,7 @@ public class FeedbackForm extends AppCompatActivity implements View.OnClickListe
         editText_feedback = (EditText) findViewById(R.id.et_feedback_text);
         buttonFeedbackSave.setOnClickListener(this);
         buttonFeedbackCancel.setOnClickListener(this);
+
 
         ratingBar_feedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -71,12 +90,29 @@ public class FeedbackForm extends AppCompatActivity implements View.OnClickListe
             return;
         }
         feedbackSubmit();
-
     }
 
-
     private void feedbackSubmit() {
-        Toast.makeText(getApplicationContext(), "Submitted", Toast.LENGTH_SHORT).show();
-        finish();
+        FirebaseUser user = mAuth.getCurrentUser();
+        String username = user.getDisplayName();
+        Map<String, Object> feedbackObjj = new HashMap<>();
+        feedbackObjj.put("user", username);
+        feedbackObjj.put("feedback Text", feedbackText);
+        feedbackObjj.put("ratings", ratingBar_feedback.getRating());
+
+        db.collection("Feedback Database")
+                .add(feedbackObjj)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(getApplicationContext(), "Thanks for your feedback", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

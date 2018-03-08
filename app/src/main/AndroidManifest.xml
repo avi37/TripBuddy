@@ -16,8 +16,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SplashScreen"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,26 +27,32 @@
         <activity
             android:name=".LogIn"
             android:label="Log In"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SignUp"
             android:label="Sign Up"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".SelectProfilePic" android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SelectProfilePic"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainNavigation"
             android:label="@string/title_activity_main_navigation"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FeedbackForm"
             android:label="Feedback"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".MyFavourites" android:screenOrientation="portrait"/>
-        <activity android:name=".ContactUs"
-            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MyFavourites"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ContactUs"
             android:label="Contact Us"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme" />
+        <activity android:name=".EditProfile"></activity>
     </application>
 
 </manifest>

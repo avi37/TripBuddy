@@ -52,6 +52,7 @@ public class SelectProfilePic extends AppCompatActivity implements View.OnClickL
     ProgressBar progressbar_saveButton, progressbar_loadProfileImage;
     Uri uriProfileImage;
     String profileImageUrl;
+    //SessionManager session;
     FirebaseAuth mAuth;
     FirebaseUser user;
 
@@ -73,17 +74,13 @@ public class SelectProfilePic extends AppCompatActivity implements View.OnClickL
         profileImage.setOnClickListener(this);
         buttonSave.setOnClickListener(this);
         textView_skip.setOnClickListener(this);
-
+        //session.checkLogin();
         loadUserInfo();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mAuth.getCurrentUser() == null) {
-            finish();
-            startActivity(new Intent(getApplicationContext(), LogIn.class));
-        }
     }
 
     private void checkConn() {
@@ -99,9 +96,6 @@ public class SelectProfilePic extends AppCompatActivity implements View.OnClickL
                 Glide.with(this)
                         .load(user.getPhotoUrl().toString())
                         .into(profileImage);
-            }
-            else {
-                profileImage.setImageResource(R.mipmap.ic_select_dp);
             }
             if (user.getDisplayName() != null) {
                 editTextUserName.setText(user.getDisplayName());
@@ -135,7 +129,8 @@ public class SelectProfilePic extends AppCompatActivity implements View.OnClickL
     }
 
     private void uploadImageToFirebaseStorage() {
-        StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("profileImages/" + user.getDisplayName().toString() + ".jpg");
+        long profileID = System.currentTimeMillis();
+        StorageReference profileImageRef = FirebaseStorage.getInstance().getReference("profileImages/"+ profileID +".jpg");
         if (uriProfileImage != null) {
             profileImageRef.putFile(uriProfileImage).
                     addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -222,7 +217,7 @@ public class SelectProfilePic extends AppCompatActivity implements View.OnClickL
             dir.mkdirs();
 
             // Create a name for the saved image
-            File file = new File(dir, user.getDisplayName().toString() +".png");
+            File file = new File(dir, "1.png");
 
             // Show a toast message on successful save
             Toast.makeText(getApplicationContext(), "Image Saved to SD Card",
@@ -239,16 +234,9 @@ public class SelectProfilePic extends AppCompatActivity implements View.OnClickL
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-        } catch (
-                Exception e
-                )
-
+        } catch (Exception e)
         {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-
         }
-
-
     }
 }
