@@ -1,9 +1,14 @@
 package com.example.avi.firebaseauth;
 
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -20,7 +25,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FeedbackForm extends AppCompatActivity implements View.OnClickListener {
+public class FeedbackFormFragment extends Fragment implements View.OnClickListener {
+
+    View view;
 
     RatingBar ratingBar_feedback;
     TextView ratingText_feedback;
@@ -32,18 +39,18 @@ public class FeedbackForm extends AppCompatActivity implements View.OnClickListe
     FirebaseAuth mAuth;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feedback_form);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_feedback_form, container, false);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
-        ratingBar_feedback = (RatingBar) findViewById(R.id.feedback_ratingBar);
-        ratingText_feedback = (TextView) findViewById(R.id.rating_text);
-        buttonFeedbackSave = (Button) findViewById(R.id.btn_feedback_submit);
-        buttonFeedbackCancel = (Button) findViewById(R.id.btn_feedback_cancel);
-        editText_feedback = (EditText) findViewById(R.id.et_feedback_text);
+        ratingBar_feedback = (RatingBar) view.findViewById(R.id.feedback_ratingBar);
+        ratingText_feedback = (TextView) view.findViewById(R.id.rating_text);
+        buttonFeedbackSave = (Button) view.findViewById(R.id.btn_feedback_submit);
+        buttonFeedbackCancel = (Button) view.findViewById(R.id.btn_feedback_cancel);
+        editText_feedback = (EditText) view.findViewById(R.id.et_feedback_text);
         buttonFeedbackSave.setOnClickListener(this);
         buttonFeedbackCancel.setOnClickListener(this);
 
@@ -68,6 +75,7 @@ public class FeedbackForm extends AppCompatActivity implements View.OnClickListe
                 ratingText_feedback.setVisibility(View.VISIBLE);
             }
         });
+        return view;
     }
 
     @Override
@@ -77,20 +85,26 @@ public class FeedbackForm extends AppCompatActivity implements View.OnClickListe
                 validateFeedback();
                 break;
             case R.id.btn_feedback_cancel:
-                finish();
                 break;
         }
     }
 
     private void validateFeedback() {
         feedbackText = editText_feedback.getText().toString();
+        float rating = ratingBar_feedback.getRating();
         if (feedbackText.isEmpty()) {
             editText_feedback.setError("Give some feedback");
             editText_feedback.requestFocus();
             return;
         }
+        if (rating <= 0) {
+            Snackbar.make(view, "Please give some rating", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return;
+        }
         feedbackSubmit();
     }
+
 
     private void feedbackSubmit() {
         FirebaseUser user = mAuth.getCurrentUser();
@@ -105,14 +119,16 @@ public class FeedbackForm extends AppCompatActivity implements View.OnClickListe
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getApplicationContext(), "Thanks for your feedback", Toast.LENGTH_SHORT).show();
-                        finish();
+                        Toast.makeText(getContext(), "Thanks for your feedback", Toast.LENGTH_SHORT).show();
+                        getActivity().getFragmentManager().popBackStack();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error while uploading your feedback !\nTry after sometime", Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
+
+

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TableRow android:divider="@color/colorAccent">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="180dp"
+            android:layout_height="130dp"
+            android:layout_column="1"
+            android:background="@drawable/beach1"
+            android:gravity="bottom|center_horizontal"
+            android:text="Beach"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="180dp"
+            android:layout_height="130dp"
+            android:layout_column="2"
+            android:background="@drawable/culture1"
+            android:gravity="bottom|center_horizontal"
+            android:text="Cultural"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="25dp" />
+    </TableRow>
+
+    <TableRow android:divider="@color/colorAccent">
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="180dp"
+            android:layout_height="130dp"
+            android:layout_column="1"
+            android:background="@drawable/trekking1"
+            android:gravity="bottom|center_horizontal"
+            android:text="Trekking"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="180dp"
+            android:layout_height="130dp"
+            android:layout_column="2"
+            android:layout_gravity="center"
+            android:background="@drawable/heritage1"
+            android:gravity="bottom|center_horizontal"
+            android:text="Heritage"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="25dp" />
+    </TableRow>
+
+    <TableRow android:divider="@color/colorAccent">
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="180dp"
+            android:layout_height="130dp"
+            android:layout_column="1"
+            android:background="@drawable/pilgrimage1"
+            android:gravity="bottom|center_horizontal"
+            android:text="Pilgrimage"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="180dp"
+            android:layout_height="130dp"
+            android:layout_column="2"
+            android:background="@drawable/hill_station1"
+            android:gravity="bottom|center_horizontal"
+            android:text="Hill Stations"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="25dp" />
+    </TableRow>
+
+</TableLayout>
+

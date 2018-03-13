@@ -192,12 +192,12 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private void registerToFirestore() {
         FirebaseUser user = mAuth.getCurrentUser();
         final String username = user.getDisplayName();
-
+        count += count;
         Map<String, Object> userDataObjj = new HashMap<>();
         userDataObjj.put("user", username);
         userDataObjj.put("Full Name", fullName);
         userDataObjj.put("Gender", gender);
-        userDataObjj.put("ID", count++);
+        userDataObjj.put("ID", count);
 
         db.collection("User Database")
                 .add(userDataObjj)
@@ -212,7 +212,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), "Error while registration", Toast.LENGTH_SHORT).show();
-                count--;
+                count -= count;
             }
         });
     }
