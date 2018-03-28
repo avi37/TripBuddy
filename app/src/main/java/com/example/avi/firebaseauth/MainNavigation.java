@@ -16,6 +16,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,9 +30,10 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Stack;
 
-public class MainNavigation extends SelectProfilePic
-        implements GlobalInterface {
+public class MainNavigation extends AppCompatActivity
+        implements GlobalInterface, View.OnClickListener {
 
     boolean doubleBackToExitPressedOnce = false;
 
@@ -40,7 +42,12 @@ public class MainNavigation extends SelectProfilePic
     FirebaseAuth mAuth;
     SessionManager session;
     NavigationView navigationView;
+    DrawerLayout drawer;
     Fragment fragment = null, selectedFragment = null;
+
+    private Stack<Fragment> fragmentStack;
+    private FragmentManager fragmentManager;
+    private FragmentTransaction ft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +57,11 @@ public class MainNavigation extends SelectProfilePic
         session = new SessionManager(getApplicationContext());
         imageView_profile = (ImageView) findViewById(R.id.nav_profileImage);
         textView_userName = (TextView) findViewById(R.id.nav_tv_username);
-        textView_myProfile = (TextView) findViewById(R.id.nav_tv_myprofile);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -66,22 +71,48 @@ public class MainNavigation extends SelectProfilePic
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
-        // loadUserInfo();
-        if (savedInstanceState == null) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            android.support.v4.app.Fragment fragment = new ExploreFragment();
-            transaction.replace(R.id.content_main_navigation, fragment);
-            transaction.commit();
-        }
+        fragmentStack = new Stack<>();
 
-        /*textView_myProfile.setOnClickListener(new View.OnClickListener() {
+        fragmentManager = getSupportFragmentManager();
+        fragment = new ExploreFragment();
+        ft = fragmentManager.beginTransaction();
+        ft.add(R.id.content_main_navigation, fragment);
+        fragmentStack.push(fragment);
+        ft.commit();
+
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_main_navigation);
+        textView_myProfile = (TextView) headerView.findViewById(R.id.nav_tv_myprofile);
+        textView_myProfile.setOnClickListener(this);
+         loadUserInfo();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), MyProfile.class));
+            public void onBackStackChanged() {
+                Fragment f = getSupportFragmentManager().findFragmentById(R.id.content_main_navigation);
+                if (f != null) {
+                    updateTitleAndDrawer(f);
+                }
             }
-        });*/
+        });
 
+    }
+
+    private void updateTitleAndDrawer(Fragment f) {
+        String fragClassName = f.getClass().getName();
+
+        if (fragClassName.equals(ExploreFragment.class.getName())) {
+            setTitle("Explore");
+            navigationView.getMenu().getItem(0).setChecked(true);
+        } else if (fragClassName.equals(MyFavouritesFragment.class.getName())) {
+            setTitle("My Favourites");
+            navigationView.getMenu().getItem(1).setChecked(true);
+        } else if (fragClassName.equals(ContactUsFragment.class.getName())) {
+            setTitle("Contact Us");
+            navigationView.getMenu().getItem(2).setChecked(true);
+        } else if (fragClassName.equals(FeedbackFormFragment.class.getName())) {
+            setTitle("Feedback");
+            navigationView.getMenu().getItem(3).setChecked(true);
+        }
     }
 
     @Override
@@ -93,15 +124,17 @@ public class MainNavigation extends SelectProfilePic
         setTitle(strName);
     }
 
-    public void changeFragment(Fragment fragment) {
+    public void changeFragment(Fragment _fragment) {
         try {
             if (fragment != null) {
-                FragmentManager manager = getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.content_main_navigation, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-                //setSelectedFragment(fragment);
+                ft = fragmentManager.beginTransaction();
+                ft.add(R.id.content_main_navigation, _fragment).addToBackStack(null);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                fragmentStack.lastElement().onPause();
+                ft.hide(fragmentStack.lastElement());
+                fragmentStack.push(_fragment);
+                ft.commit();
+                drawer.closeDrawer(GravityCompat.START);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,30 +143,33 @@ public class MainNavigation extends SelectProfilePic
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-            showQuitDialog();
-        }
-
-        if (selectedFragment != null) {
-            if (selectedFragment instanceof ExploreFragment) {
-                if (doubleBackToExitPressedOnce) {
-                    super.onBackPressed();
-                    return;
+        if (fragmentStack.size() > 1) {
+            ft = fragmentManager.beginTransaction();
+            fragmentStack.lastElement().onPause();
+            ft.remove(fragmentStack.pop());
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+            fragmentStack.lastElement().onResume();
+            ft.show(fragmentStack.lastElement());
+            ft.commit();
+            updateTitleAndDrawer(fragmentStack.lastElement());
+        } else {
+            if (fragmentStack.size() == 1) {
+                if (selectedFragment instanceof ExploreFragment) {
+                    if (doubleBackToExitPressedOnce) {
+                        super.onBackPressed();
+                        return;
+                    }
                 }
+                this.doubleBackToExitPressedOnce = true;
+                Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        doubleBackToExitPressedOnce = false;
+                    }
+                }, 2000);
             }
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce = false;
-                }
-            }, 2000);
         }
     }
 
@@ -143,21 +179,16 @@ public class MainNavigation extends SelectProfilePic
         int id = item.getItemId();
 
         if (id == R.id.nav_explore) {
-            methodMenuExplore();
-            //fragment = new ExploreFragment();
+            changeFragment(new ExploreFragment());
             return true;
         } else if (id == R.id.nav_favourites) {
-            Toast.makeText(getApplicationContext(), "Yet to implement!", Toast.LENGTH_SHORT).show();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
+            changeFragment(new MyFavouritesFragment());
             return true;
         } else if (id == R.id.nav_contactUs) {
-            //fragment = new ContactUsFragment();
-            methodMenuContactUs();
+            changeFragment(new ContactUsFragment());
             return true;
         } else if (id == R.id.nav_feedback) {
-            //fragment = new FeedbackFormFragment();
-            methodMenuFeedback();
+            changeFragment(new FeedbackFormFragment());
             return true;
         } else if (id == R.id.nav_rateUs) {
             methodMenuRateUs();
@@ -170,61 +201,65 @@ public class MainNavigation extends SelectProfilePic
             return true;
         } else if (id == R.id.nav_quit) {
             showQuitDialog();
+            return true;
         }
-
-        //transaction.replace(R.id.content_main_navigation, fragment).addToBackStack("Explore");
-        //transaction.commit();
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //drawer.closeDrawer(GravityCompat.START);
-
-        //changeFragment(fragment);
         return true;
     }
 
-    private void methodMenuFeedback() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        android.support.v4.app.Fragment fragment = new FeedbackFormFragment();
-        transaction.replace(R.id.content_main_navigation, fragment);
-        transaction.commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return;
-    }
-
-    private void methodMenuContactUs() {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        android.support.v4.app.Fragment fragment = new ContactUsFragment();
-        transaction.replace(R.id.content_main_navigation, fragment);
-        transaction.commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return;
-    }
 
     private void methodMenuExplore() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (!(navigationView.getMenu().findItem(R.id.nav_explore).isChecked())) {
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            android.support.v4.app.Fragment fragment = new ExploreFragment();
-            transaction.replace(R.id.content_main_navigation, fragment);
-            transaction.commit();
-        } else {
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
+        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (!(selectedFragment instanceof ExploreFragment)) {
+            ft = fragmentManager.beginTransaction();
+            Fragment exFrag = new ExploreFragment();
+            ft.add(R.id.content_main_navigation, exFrag);
+            fragmentStack.lastElement().onPause();
+            ft.hide(fragmentStack.lastElement());
+            fragmentStack.push(exFrag);
+            ft.commit();
         }
+        drawer.closeDrawer(GravityCompat.START);
         return;
     }
 
     private void methodMenuShare() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "https:nehal.tech/home.html");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "https:nehal.tech/index.html");
         sendIntent.setType("text/plain");
         startActivity(Intent.createChooser(sendIntent, "Share App Link"));
+    }
+
+    void methodMenuRateUs() {
+        Uri uri = Uri.parse("market://details");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        uri = Uri.parse("http://play.google.com/store/apps/details?");
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    private void showLogoutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage("Are you sure you want to logout?")
+                .setTitle("Confirm Logout");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                logout();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                navigationView.getMenu().getItem(0).setChecked(true);
+                return;
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        drawer.closeDrawer(GravityCompat.START);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
     private void logout() {
@@ -251,27 +286,7 @@ public class MainNavigation extends SelectProfilePic
         });
 
         AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void showLogoutDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage("Are you sure you want to logout?")
-                .setTitle("Confirm Logout");
-
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                logout();
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                return;
-            }
-        });
-
-        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
 
@@ -280,6 +295,7 @@ public class MainNavigation extends SelectProfilePic
             File filepath = Environment.getExternalStorageDirectory();
             String path = filepath.getAbsolutePath()
                     + "/TripBuddy/Profile Image";
+
             FirebaseUser user = mAuth.getCurrentUser();
             File f = new File(path, "1.jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
@@ -292,16 +308,13 @@ public class MainNavigation extends SelectProfilePic
         }
     }
 
-    void methodMenuRateUs() {
-        Uri uri = Uri.parse("market://details");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        uri = Uri.parse("http://play.google.com/store/apps/details?");
-        intent.setData(uri);
-        startActivity(intent);
-    }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.nav_tv_myprofile:
+                startActivity(new Intent(getApplicationContext(), MyProfile.class));
+        }
 
-    public void gotoMyProfile(View view) {
-        startActivity(new Intent(getApplicationContext(), MyProfile.class));
     }
 }
 

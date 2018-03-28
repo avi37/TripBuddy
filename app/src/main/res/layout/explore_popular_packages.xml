@@ -5,17 +5,16 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5dp"
-    tools:context="com.example.avi.firebaseauth.ExploreAct">
+    tools:context="com.example.avi.firebaseauth.MainNavigation">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/crdlist"
+        android:id="@+id/pkg_cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="5dp"
+        android:layout_margin="7dp"
         app:cardCornerRadius="7dp"
         app:cardElevation="10dp"
         app:cardMaxElevation="10dp">
@@ -24,8 +23,7 @@
             android:id="@+id/Lin_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="3dp">
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/cardimageview"
@@ -34,9 +32,10 @@
                 android:scaleType="centerCrop" />
 
             <TextView
-                android:id="@+id/cardtxt"
+                android:id="@+id/pkg_card_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:paddingTop="4dp"
@@ -44,37 +43,68 @@
                 android:textColor="#000000"
                 android:textSize="18dp" />
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/pkg_card_duration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="7dp">
+                    android:layout_weight="2"
+                    android:text="Day_night"
+                    android:textSize="14dp"
+                    android:textStyle="italic" />
 
-                    <TextView
-                        android:id="@+id/package_daynight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Day_night"
-                        android:textSize="14dp"
-                        android:textStyle="italic" />
+                <TextView
+                    android:id="@+id/pkg_card_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="price"
+                    android:textSize="17dp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/package_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="price"
-                        android:textSize="17dp" />
-                </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="8">
+
+                <Button
+                    android:id="@+id/card_btn_book"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:background="@drawable/bg_blue_btn"
+                    android:text="BOOK" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4" />
+
+                <ImageView
+                    android:id="@+id/iv_addToFav"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_weight="1"
+                    android:src="@drawable/fav_ept" />
+
+                <ImageView
+                    android:id="@+id/iv_sharePkg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_weight="1"
+                    android:src="@drawable/share_pkg" />
             </LinearLayout>
         </LinearLayout>
-
-
     </android.support.v7.widget.CardView>
 </RelativeLayout>

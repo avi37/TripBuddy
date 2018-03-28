@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_my_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/BG_MyProfile"
     android:orientation="vertical"
     tools:context="com.example.avi.firebaseauth.MyProfile">
 
@@ -13,16 +15,125 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="159dp"
-                android:src="@drawable/web_hi_res_512"
-                android:elevation="20dp"
-                android:background="@color/cardview_dark_background"/>
-        </LinearLayout>
+                android:layout_height="200dp"
+                android:background="@drawable/profile_image_bg"
+                android:elevation="2dp"
+                android:orientation="vertical" />
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/myProfile_circleImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-70dp"
+                android:elevation="5dp"
+                android:src="@drawable/icon_favourites"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="2dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/FAB_changeProfileImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fabSize="mini"
+                android:elevation="1dp"
+                android:layout_marginStart="225dp"
+                android:layout_marginTop="-36dp"
+                android:src="@drawable/ic_action_update_image" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:elevation="1dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/myProfile_tv_userName"
+                    android:layout_weight="1.8"
+                    android:text="Username"
+                    android:paddingStart="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/myProfile_imgBtn_userName"
+                    android:layout_weight="0.2"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_action_edit" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:elevation="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.8"
+                    android:text="E-mail"
+                    android:paddingStart="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp"
+                    android:id="@+id/myProfile_tv_email" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/myProfile_imgBtn_email"
+                    android:layout_weight="0.2"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_action_edit" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/white"
+                android:elevation="1dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/myProfile_tv_number"
+                    android:layout_weight="1.8"
+                    android:text="Mobile Number"
+                    android:paddingStart="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/myProfile_imgBtn_number"
+                    android:layout_weight="0.2"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_action_edit" />
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

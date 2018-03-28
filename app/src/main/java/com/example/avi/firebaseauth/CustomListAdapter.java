@@ -1,13 +1,14 @@
 package com.example.avi.firebaseauth;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +19,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-
-import junit.framework.Test;
 
 import java.util.ArrayList;
 
@@ -33,6 +32,9 @@ public class CustomListAdapter extends ArrayAdapter<Cards> {
     private Context mContext;
     private int mResource;
 
+    FavSharedPreference sharedPreference = new FavSharedPreference();
+    Activity activity;
+
     /**
      * Holds variables in a View
      */
@@ -43,15 +45,10 @@ public class CustomListAdapter extends ArrayAdapter<Cards> {
         TextView day_night;
         TextView price;
         CardView cardView;
+        Button btn_book;
+        ImageView iv_addfav, iv_sharePkg;
     }
 
-    /**
-     * Default constructor for the PersonListAdapter
-     *
-     * @param context
-     * @param resource
-     * @param objects
-     */
     public CustomListAdapter(Context context, int resource, ArrayList<Cards> objects) {
         super(context, resource, objects);
         mContext = context;
@@ -72,57 +69,77 @@ public class CustomListAdapter extends ArrayAdapter<Cards> {
         String day_night = getItem(position).getDay_night();
         String price = getItem(position).getPrice();
         //create the view result for showing the animation
-        final View result;
 
         //ViewHolder object
-        ViewHolder holder;
-
+        final ViewHolder holder;
 
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(mResource, parent, false);
             holder = new ViewHolder();
-            holder.title = (TextView) convertView.findViewById(R.id.cardtxt);
-            holder.image = (ImageView) convertView.findViewById(R.id.cardimageview);
-            holder.cardView = (CardView) convertView.findViewById(R.id.crdlist);
-            holder.day_night = (TextView) convertView.findViewById(R.id.package_daynight);
-            holder.price = (TextView) convertView.findViewById(R.id.package_price);
-
-            result = convertView;
-
+            holder.title = convertView.findViewById(R.id.pkg_card_name);
+            holder.image = convertView.findViewById(R.id.cardimageview);
+            holder.cardView = convertView.findViewById(R.id.pkg_cardView);
+            holder.day_night = convertView.findViewById(R.id.pkg_card_duration);
+            holder.price = convertView.findViewById(R.id.pkg_card_price);
+            holder.btn_book = convertView.findViewById(R.id.card_btn_book);
+            holder.iv_addfav = convertView.findViewById(R.id.iv_addToFav);
+            holder.iv_sharePkg = convertView.findViewById(R.id.iv_sharePkg);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
-            result = convertView;
         }
-
 
         holder.title.setText(title);
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.btn_book.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "BOOK", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.iv_addfav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (true) {
+                    holder.iv_addfav.setImageResource(R.drawable.fav_filled);
+                    Toast.makeText(getContext(), "Added to favourites", Toast.LENGTH_SHORT).show();
+                } else {
+                    holder.iv_addfav.setImageResource(R.drawable.fav_ept);
+                    Toast.makeText(getContext(), "Removed from favourites", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        holder.iv_sharePkg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Share", Toast.LENGTH_SHORT).show();
+            }
+        });
+        /*holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println("CardView Call");
-                //Toast.makeText(mContext ,"Card View Call",Toast.LENGTH_SHORT).show();
                 Toast.makeText(mContext, "clicked=" + getItem(position).getTitle(), Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(mContext, Test.class);
-                mContext.startActivity(i);
+                //Intent i = new Intent(mContext, Test.class);
+                //mContext.startActivity(i);
             }
-        });
+        });*/
 
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("Imageview");
+                Toast.makeText(getContext(), "Imageview clicked", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         holder.day_night.setText(day_night);
         holder.price.setText(price);
         //create the imageloader object
         ImageLoader imageLoader = ImageLoader.getInstance();
-        ;
+
         int defaultImage = mContext.getResources().getIdentifier("@drawable/loading", null, mContext.getPackageName());
 
         //create display options

@@ -25,7 +25,7 @@ public class PopularFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.listview_layout, container, false);
         mlistview = (ListView) view.findViewById(R.id.listview);
-        crdlist = (CardView) view.findViewById(R.id.crdlist);
+        crdlist = (CardView) view.findViewById(R.id.pkg_cardView);
 
         ArrayList<Cards> list = new ArrayList<Cards>();
 

@@ -33,19 +33,17 @@
             android:label="Sign Up"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SelectProfilePic"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".MainNavigation"
             android:label="@string/title_activity_main_navigation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MyFavourites"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".MyProfile"
             android:label="My Profile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PhoneNumberVarify"
+            android:label="Phone Number Varification"
             android:screenOrientation="portrait" />
     </application>
 

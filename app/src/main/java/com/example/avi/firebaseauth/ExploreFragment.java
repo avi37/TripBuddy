@@ -14,7 +14,7 @@ public class ExploreFragment extends Fragment {
     ViewPager viewPager;
     TabLayout tabLayout;
     PopularFragment popularFragment;
-    Category category;
+    CategoriesFragment categoriesFragment;
 
     GlobalInterface mCallBackInt;
 
@@ -60,10 +60,10 @@ public class ExploreFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
         popularFragment = new PopularFragment();
-        category = new Category();
+        categoriesFragment = new CategoriesFragment();
 
         adapter.addFragment(popularFragment, "Popular");
-        adapter.addFragment(category, "Categories");
+        adapter.addFragment(categoriesFragment, "Categories");
 
         viewPager.setAdapter(adapter);
     }

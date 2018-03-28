@@ -8,6 +8,7 @@
     <color name="colorSecondary">#ef6f6c</color>
     <color name="colorSecondary2">#f93943</color>
 
+    <color name="BG_MyProfile">#e0f0ff</color>
     <color name="colorAccentNew">#fcb07e</color>
     <color name="color1">#f37748</color>
     <color name="white">#ffff</color>
@@ -15,4 +16,5 @@
     <color name="LightBlue_opacity">#aa338dff</color>
     <color name="default_blue">#FF175DA1</color>
     <color name="Light_blue_dark">#1f78e9</color>
+    <color name="card_bg">#fd888b</color>
 </resources>

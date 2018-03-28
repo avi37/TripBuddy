@@ -71,6 +71,11 @@
                 android:text="Cancel" />
         </LinearLayout>
 
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar_feedback"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </FrameLayout>

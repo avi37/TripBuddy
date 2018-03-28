@@ -109,7 +109,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                 if (task.isSuccessful()) {
                     finish();
                     session.createLoginSession(email, pwd);
-                    Intent i = new Intent(getApplicationContext(), SelectProfilePic.class);
+                    Intent i = new Intent(getApplicationContext(), MainNavigation.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                 } else {
@@ -126,7 +126,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onStart() {
         super.onStart();
-        checkConn();
+        //checkConn();
         if (mAuth.getCurrentUser() != null) {
             finish();
             session.checkLogin();
@@ -137,7 +137,7 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onRestart();
-        checkConn();
+        //checkConn();
     }
 
     @Override
@@ -159,11 +159,36 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener {
                 finish();
                 break;
             case R.id.tv_login_skip:
-                i = new Intent(this, MainNavigation.class);
-                startActivity(i);
-                finish();
+                loginSkipuser();
                 break;
         }
     }
+
+    private void loginSkipuser() {
+        final String _email = "skipuser@tripbuddy.com", _pwd = "123456";
+        mAuth.signInWithEmailAndPassword(_email, _pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.GONE);
+                if (task.isSuccessful()) {
+                    finish();
+                    session.createLoginSession(_email, _pwd);
+                    finish();
+                    Intent i = new Intent(getApplicationContext(), MainNavigation.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                } else {
+                    if (!(task.getException() instanceof FirebaseAuthUserCollisionException)) {
+                        Toast.makeText(getApplicationContext(), "You are not registered user\nSign Up first", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Some error occurred while Logging in", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+        return;
+    }
+
+
 }
 

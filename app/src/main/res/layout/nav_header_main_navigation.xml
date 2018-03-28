@@ -45,9 +45,9 @@
             android:text="My Profile"
             android:textColor="#454851"
             android:id="@+id/nav_tv_myprofile"
-            android:onClick="gotoMyProfile"
             android:textStyle="bold"
             android:padding="4dp"
+            android:clickable="true"
             android:gravity="right"/>
     </LinearLayout>
 </LinearLayout>

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class FeedbackFormFragment extends Fragment implements View.OnClickListen
     EditText editText_feedback;
     Button buttonFeedbackSave, buttonFeedbackCancel;
     String feedbackText;
+    ProgressBar progressBar;
 
     FirebaseFirestore db;
     FirebaseAuth mAuth;
@@ -51,6 +53,7 @@ public class FeedbackFormFragment extends Fragment implements View.OnClickListen
         buttonFeedbackSave = (Button) view.findViewById(R.id.btn_feedback_submit);
         buttonFeedbackCancel = (Button) view.findViewById(R.id.btn_feedback_cancel);
         editText_feedback = (EditText) view.findViewById(R.id.et_feedback_text);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar_feedback);
         buttonFeedbackSave.setOnClickListener(this);
         buttonFeedbackCancel.setOnClickListener(this);
 
@@ -107,6 +110,7 @@ public class FeedbackFormFragment extends Fragment implements View.OnClickListen
 
 
     private void feedbackSubmit() {
+        progressBar.setVisibility(View.VISIBLE);
         FirebaseUser user = mAuth.getCurrentUser();
         String username = user.getDisplayName();
         Map<String, Object> feedbackObjj = new HashMap<>();
@@ -119,6 +123,7 @@ public class FeedbackFormFragment extends Fragment implements View.OnClickListen
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
+                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(getContext(), "Thanks for your feedback", Toast.LENGTH_SHORT).show();
                         getActivity().getFragmentManager().popBackStack();
                     }

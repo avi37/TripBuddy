@@ -176,7 +176,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 if (task.isSuccessful()) {
                     finish();
                     registerToFirestore();
-                    Intent i = new Intent(getApplicationContext(), SelectProfilePic.class);
+                    Intent i = new Intent(getApplicationContext(), MainNavigation.class);
                     startActivity(i);
                 } else {
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {
@@ -243,7 +243,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onRestart();
-        checkConn();
+        //checkConn();
     }
 
     @Override
